@@ -1,0 +1,23 @@
+{
+  "name": "foodary-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.13.1",
+  "devDependencies": {
+    "@eslint/js": "^9.33.0",
+    "@types/aws-lambda": "^8.10.152",
+    "@types/node": "^24.2.1",
+    "eslint": "^9.33.0",
+    "globals": "^16.3.0",
+    "jiti": "^2.5.1",
+    "typescript": "^5.9.2",
+    "typescript-eslint": "^8.39.1"
+  }
+}

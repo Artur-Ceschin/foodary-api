@@ -1,0 +1,31 @@
+org: arturceschin
+service: foodary-api
+
+provider:
+  name: aws
+  region: sa-east-1
+  runtime: nodejs22.x
+  memorySize: 128
+
+package:
+  individually: true
+
+build:
+  esbuild:
+    bundle: true
+    minify: true
+    sourcemap: true
+    target: es2022
+    exclude:
+      - '@aws-sdk/*'
+    external:
+      - 'aws-sdk/*'
+
+
+functions:
+  hello:
+    handler: src/hello.handler
+    events:
+      - httpApi:
+          path: /
+          method: GET
