@@ -1,9 +1,25 @@
-export abstract class Controller<TBody = undefined> {
-  protected abstract handle(request: Controller.Request<TBody>): Promise<Controller.Response<TBody>>
+import { getSchema } from '../../kernel/decorators/schema';
 
-  public execute(request: Controller.Request<TBody>): Promise<Controller.Response<TBody>> {
-    console.log('Excecute controller ran');
-    return this.handle(request);
+export abstract class Controller<TBody = undefined> {
+  protected abstract handle(request: Controller.Request): Promise<Controller.Response<TBody>>
+
+  public execute(request: Controller.Request): Promise<Controller.Response<TBody>> {
+    const body = this.validateBody(request.body);
+
+    return this.handle({
+      ...request,
+      body: body as Record<string, unknown>,
+    });
+  }
+
+  private validateBody(body: Controller.Request['body']) {
+    const schema = getSchema(this);
+
+    if(!schema) {
+      return body;
+    }
+
+    return schema.parse(body);
   }
 }
 
