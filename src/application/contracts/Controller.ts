@@ -1,9 +1,13 @@
-export interface IController<TBody = undefined> {
+export abstract class Controller<TBody = undefined> {
+  protected abstract handle(request: Controller.Request<TBody>): Promise<Controller.Response<TBody>>
 
-  handle(params: IController.Request<TBody>): Promise<IController.Response<TBody>>
+  public execute(request: Controller.Request<TBody>): Promise<Controller.Response<TBody>> {
+    console.log('Excecute controller ran');
+    return this.handle(request);
+  }
 }
 
-export namespace IController {
+export namespace Controller {
   export type Request<
   TBody = Record<string, unknown>,
   TParams = Record<string, unknown>,
