@@ -1,4 +1,5 @@
 import type awsLambda from 'aws-lambda';
+import { BadRequest } from '../../application/errors/http/BadRequest';
 
 export function lambdaBodyParser(body: awsLambda.APIGatewayProxyEventV2['body']) {
   try {
@@ -8,6 +9,6 @@ export function lambdaBodyParser(body: awsLambda.APIGatewayProxyEventV2['body'])
 
     return  JSON.parse(body ?? '{}');
   } catch {
-    throw new Error('Malformated body.');
+    throw new BadRequest('Malformated body.');
   }
 }
