@@ -1,10 +1,10 @@
-import type { APIGatewayProxyEventV2, APIGatewayProxyResultV2 } from 'aws-lambda';
-import type { Controller } from '../../application/contracts/Controller';
-import { lambdaBodyParser } from '../utils/lambdaBodyParse';
 import { ZodError } from 'zod';
-import { ErrorCode } from '../../application/errors/ErrorCode';
-import { lambdaErrorResponse } from '../utils/lambdaErrorResponse';
-import { HttpError } from '../../application/errors/http/HttpError';
+import type { APIGatewayProxyEventV2, APIGatewayProxyResultV2 } from 'aws-lambda';
+import { Controller } from '@application/contracts/Controller';
+import { ErrorCode } from '@application/errors/ErrorCode';
+import { HttpError } from '@application/errors/http/HttpError';
+import { lambdaBodyParser } from '@main/utils/lambdaBodyParse';
+import { lambdaErrorResponse } from '@main/utils/lambdaErrorResponse';
 
 export function lambdaHttpAdapter(controller: Controller<unknown>) {
   return async(event: APIGatewayProxyEventV2): Promise<APIGatewayProxyResultV2> => {
