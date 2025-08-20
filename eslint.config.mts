@@ -42,6 +42,7 @@ export default tseslint.config(
       ],
       '@typescript-eslint/no-namespace': 'off',
       '@typescript-eslint/no-explicit-any': 'off',
+      'no-console': 'off'
     },
   },
 );
