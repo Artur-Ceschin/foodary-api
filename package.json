@@ -24,6 +24,7 @@
     "typescript-eslint": "^8.39.1"
   },
   "dependencies": {
+    "@aws-sdk/client-cognito-identity-provider": "^3.873.0",
     "reflect-metadata": "^0.2.2",
     "zod": "^4.0.17"
   }
