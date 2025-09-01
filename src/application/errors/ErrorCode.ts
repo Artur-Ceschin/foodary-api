@@ -1,5 +1,10 @@
 export enum ErrorCode {
+  //application
   VALIDATION = 'VALIDATION',
+  EMAIL_ALREADY_IN_USE = 'EMAIL_ALREADY_IN_USE',
+
+  //http
   INTERNAL_SERVER_ERROR = 'INTERNAL_SERVER_ERROR',
   BAD_REQUEST = 'BAD_REQUEST',
+
 }
