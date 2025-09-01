@@ -12,6 +12,13 @@ export class SignUpUseCase {
   ) {}
 
   async execute({ email, password }: SignUpUseCase.Input): Promise<SignUpUseCase.Output> {
+
+    const emailAlreadyInUse = await this.accountRepository.findEmail(email);
+
+    if(emailAlreadyInUse) {
+      throw new Error('Email already in use');
+    }
+
     const { externalId } = await this.authGateway.signUp({ email, password });
 
     const account = new Account({ email, externalId, createdAt: new Date() });

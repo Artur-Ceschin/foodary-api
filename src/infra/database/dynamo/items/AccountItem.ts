@@ -30,6 +30,15 @@ export class AccountItem {
     });
   }
 
+  static toEntity(accountItem: AccountItem.ItemType) {
+    return new Account({
+      id: accountItem.id,
+      email: accountItem.email,
+      externalId: accountItem.externalId,
+      createdAt: new Date(accountItem.createdAt),
+    });
+  }
+
   static getPk(accountId: string): AccountItem.Keys['PK'] {
     return `ACCOUNT#${accountId}`;
   }
