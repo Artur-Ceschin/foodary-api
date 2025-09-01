@@ -5,7 +5,7 @@ import { env } from './env';
 export class AppConfig {
 
   readonly auth: AppConfig.Auth;
-  readonly database: AppConfig.Database;
+  readonly db: AppConfig.db;
 
   constructor() {
 
@@ -18,11 +18,9 @@ export class AppConfig {
       },
     };
 
-    this.database = {
-      main: {
-        dynamodb: {
-          mainTable: env.MAIN_TABLE_NAME,
-        },
+    this.db = {
+      dynamodb: {
+        mainTable: env.MAIN_TABLE_NAME,
       },
     };
   }
@@ -40,11 +38,9 @@ export namespace AppConfig {
 }
 
 export namespace AppConfig {
-  export type Database = {
-    main: {
-      dynamodb: {
-        mainTable: string;
-      };
+  export type db = {
+    dynamodb: {
+      mainTable: string;
     };
   };
 }
