@@ -1,0 +1,28 @@
+org: arturceschin
+service: foodary-api
+
+provider:
+  name: aws
+  region: us-east-1
+  runtime: nodejs22.x
+  memorySize: 128
+
+package:
+  individually: true
+
+build:
+  esbuild:
+    bundle: true
+    minify: true
+    sourcemap: true
+    exclude:
+      - "@aws-sdk/*"
+    external:
+      - "@aws-sdk/*"
+functions:
+  hello:
+    handler: src/handle.handler
+    events:
+      - httpApi:
+          path: /hello/{id}
+          method: POST
