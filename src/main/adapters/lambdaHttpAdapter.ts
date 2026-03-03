@@ -1,18 +1,18 @@
 
 import type { APIGatewayProxyEventV2, APIGatewayProxyResultV2 } from 'aws-lambda';
-import type { IController } from '../../applications/contracts/Controller.js';
+import { Controller } from '../../applications/contracts/Controller.js';
 import { lambdaBodyParser } from '../utils/lambdaBodyParser.js';
 import { ZodError } from 'zod';
 
-export function lambdaHttpAdapter(controller: IController<unknown>) {
+export function lambdaHttpAdapter(controller: Controller<unknown>) {
 
   return async (event: APIGatewayProxyEventV2): Promise<APIGatewayProxyResultV2> => {
    try {
-     const body = lambdaBodyParser(event.body);
+      const body = lambdaBodyParser(event.body);
       const params = event.pathParameters ?? {};
       const queryParams = event.queryStringParameters ?? {};
 
-      const response = await controller.handle({
+      const response = await controller.execute({
         body,
         params,
         queryParams,
