@@ -1,7 +1,7 @@
 
-import { Schema } from '../../kernel/decorators/Schema';
+import { Schema } from '@kernel/decorators/Schema';
 import { Controller } from '../contracts/Controller';
-import { HelloBody, helloSchema } from './schemas/HelloSchema';
+import { helloSchema, HelloBody } from './schemas/HelloSchema';
 
 @Schema(helloSchema)
 export class HelloController extends Controller<unknown> {

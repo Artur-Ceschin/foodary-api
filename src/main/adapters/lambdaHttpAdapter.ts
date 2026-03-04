@@ -1,11 +1,10 @@
-
-import type { APIGatewayProxyEventV2, APIGatewayProxyResultV2 } from 'aws-lambda';
-import { Controller } from '../../applications/contracts/Controller.js';
-import { lambdaBodyParser } from '../utils/lambdaBodyParser.js';
+import { lambdaBodyParser } from '@main/utils/lambdaBodyParser';
+import { lambdaErrorResponse } from '@main/utils/lambdaErrorResponse';
+import { APIGatewayProxyEventV2, APIGatewayProxyResultV2 } from 'aws-lambda';
+import { Controller } from 'src/applications/contracts/Controller';
+import { ErrorCode } from 'src/applications/errors/ErrorCode';
+import { HttpError } from 'src/applications/errors/http/HttpError';
 import { ZodError } from 'zod';
-import { ErrorCode } from '../../applications/errors/ErrorCode.js';
-import { lambdaErrorResponse } from '../utils/lambdaErrorResponse.js';
-import { HttpError } from '../../applications/errors/http/HttpError.js';
 
 export function lambdaHttpAdapter(controller: Controller<unknown>) {
 

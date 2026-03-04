@@ -20,6 +20,12 @@
     "moduleDetection": "force",
     "skipLibCheck": true,
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true
+    "emitDecoratorMetadata": true,
+    "baseUrl": ".",
+    "paths": {
+      "@applications/*": ["src/application/*"],
+      "@kernel/*": ["src/kernel/*"],
+      "@main/*": ["src/main/*"],
+    }
   }
 }
