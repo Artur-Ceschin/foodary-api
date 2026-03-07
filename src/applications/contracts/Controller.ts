@@ -1,5 +1,7 @@
+import { Injectable } from '@kernel/decorators/Injectable';
 import { getSchema } from '@kernel/decorators/Schema';
 
+@Injectable()
 export abstract class Controller<TBody = undefined> {
     protected abstract handle(request: Controller.Request): Promise<Controller.Response<TBody>>
 

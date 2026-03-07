@@ -1,10 +1,8 @@
 
-import { Schema } from '@kernel/decorators/Schema';
 import { Controller } from '../contracts/Controller';
-import { helloSchema, HelloBody } from './schemas/HelloSchema';
+import {  HelloBody } from './schemas/HelloSchema';
 import { HelloUseCase } from '../usecases/HelloUseCase';
 
-@Schema(helloSchema)
 export class HelloController extends Controller<unknown> {
 
   constructor(private helloUseCase: HelloUseCase) {

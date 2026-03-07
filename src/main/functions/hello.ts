@@ -2,8 +2,8 @@ import 'reflect-metadata';
 
 import { HelloController } from '../../applications/controllers/HelloController.js';
 import { lambdaHttpAdapter } from '../adapters/lambdaHttpAdapter.js';
-import { HelloUseCase } from 'src/applications/usecases/HelloUseCase.js';
+import { Registry } from '@kernel/di/Registry.js';
 
-const controller = new HelloController(new HelloUseCase);
+const controller = Registry.getInstance().resolve(HelloController);
 
 export const handler = lambdaHttpAdapter(controller);
