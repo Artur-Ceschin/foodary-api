@@ -1,4 +1,4 @@
-import { z, ZodError } from "zod"
+import { z, ZodError} from "zod"
 
 export const schema = z.object({
   COGNITO_CLIENT_ID: z.string().min(1)
@@ -15,3 +15,5 @@ function getEnv() {
     throw error
   }
 }
+
+export const env = getEnv()
