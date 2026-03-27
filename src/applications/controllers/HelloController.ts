@@ -1,10 +1,11 @@
 
 import { Controller } from '../contracts/Controller';
+import { SignUpUseCase } from '../usecases/auth/SignUpUseCase';
 import { HelloBody } from './schemas/HelloSchema';
 
-export class HelloController extends Controller<unknown> {
+export class SignUpController extends Controller<unknown> {
 
-  constructor(private helloUseCase: HelloUseCase) {
+  constructor(private signUpUseCase: SignUpUseCase) {
     super();
   }
 
@@ -12,8 +13,9 @@ export class HelloController extends Controller<unknown> {
     request: Controller.Request<HelloBody>):
     Promise<Controller.Response<unknown>> {
 
-    const result = await this.helloUseCase.execute({
+    const result = await this.signUpUseCase.execute({
       email: request.body.email,
+      password: request.body.password
     });
 
     return {

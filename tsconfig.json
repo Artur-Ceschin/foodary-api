@@ -3,8 +3,6 @@
   "compilerOptions": {
     "module": "nodenext",
     "target": "esnext",
-    "types": ["node"],
-
     "sourceMap": true,
     "declaration": true,
     "declarationMap": true,
