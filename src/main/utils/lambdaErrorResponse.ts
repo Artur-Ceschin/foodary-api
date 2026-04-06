@@ -8,12 +8,12 @@ interface ILambdaErrorResponseParams {
 
 export function lambdaErrorResponse({ statusCode, code, message }: ILambdaErrorResponseParams) {
   return {
-      statusCode,
-      body: JSON.stringify({
-        error: {
-          code,
-          message,
-        },
-      }),
-    };
+    statusCode,
+    body: JSON.stringify({
+      error: {
+        code,
+        message,
+      },
+    }),
+  };
 }

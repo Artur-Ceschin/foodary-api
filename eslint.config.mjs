@@ -15,6 +15,7 @@ export default defineConfig([
       'object-curly-spacing': ['error', 'always'],
       'array-bracket-spacing': ['error', 'never'],
       'no-empty': 'off',
+      indent: ['error', 2],
       // 'space-before-function-paren': ['error', 'never'],
       'arrow-spacing': ['error', { before: true, after: true }],
       'key-spacing': ['error', { beforeColon: false, afterColon: true }],

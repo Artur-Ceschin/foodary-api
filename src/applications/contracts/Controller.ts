@@ -6,22 +6,22 @@ export abstract class Controller<TBody = undefined> {
     protected abstract handle(request: Controller.Request): Promise<Controller.Response<TBody>>
 
     public execute(request: Controller.Request):Promise<Controller.Response<TBody>> {
-    const body = this.validateBody(request.body);
+      const body = this.validateBody(request.body);
 
-    return this.handle({
-      ...request,
-      body,
-     });
-   }
-
-   private validateBody(body: Controller.Request['body']) {
-    const schema = getSchema(this);
-    if(!schema) {
-      return body;
+      return this.handle({
+        ...request,
+        body,
+      });
     }
 
-    return schema.parse(body) as Controller.Request['body'];
-   }
+    private validateBody(body: Controller.Request['body']) {
+      const schema = getSchema(this);
+      if(!schema) {
+        return body;
+      }
+
+      return schema.parse(body) as Controller.Request['body'];
+    }
 }
 
 export namespace Controller {
