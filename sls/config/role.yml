@@ -1,0 +1,6 @@
+statements:
+  - Effect: Allow
+    Action:
+      - dynamoDB:PutItem
+    Resource:
+      - !GetAtt MainTable.Arn
