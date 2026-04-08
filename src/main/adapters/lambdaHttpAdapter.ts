@@ -2,6 +2,7 @@ import { lambdaBodyParser } from '@main/utils/lambdaBodyParser';
 import { lambdaErrorResponse } from '@main/utils/lambdaErrorResponse';
 import { APIGatewayProxyEventV2, APIGatewayProxyResultV2 } from 'aws-lambda';
 import { Controller } from 'src/applications/contracts/Controller';
+import { ApplicationError } from 'src/applications/errors/application/ApplicationError';
 import { ErrorCode } from 'src/applications/errors/ErrorCode';
 import { HttpError } from 'src/applications/errors/http/HttpError';
 import { ZodError } from 'zod';
@@ -39,6 +40,14 @@ export function lambdaHttpAdapter(controller: Controller<unknown>) {
 
       if(error instanceof HttpError) {
         return lambdaErrorResponse(error);
+      }
+
+      if(error instanceof ApplicationError) {
+        return lambdaErrorResponse({
+          statusCode: error.statusCode ?? 400,
+          code: error.code,
+          message: error.message,
+        });
       }
 
       // eslint-disable-next-line no-console

@@ -10,8 +10,8 @@ export class AccountItem {
     this.keys = {
       PK: AccountItem.getPK(attrs.id),
       SK: AccountItem.getSK(attrs.id),
-      GSI1PK: AccountItem.getGSI1PK(attrs.id),
-      GSI1SK: AccountItem.getGSI1SK(attrs.id),
+      GSI1PK: AccountItem.getGSI1PK(attrs.email),
+      GSI1SK: AccountItem.getGSI1SK(attrs.email),
     };
   }
 
