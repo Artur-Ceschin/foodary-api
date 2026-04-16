@@ -1,24 +1,33 @@
 import { lambdaBodyParser } from '@main/utils/lambdaBodyParser';
 import { lambdaErrorResponse } from '@main/utils/lambdaErrorResponse';
-import { APIGatewayProxyEventV2, APIGatewayProxyResultV2 } from 'aws-lambda';
+import { APIGatewayProxyEventV2, APIGatewayProxyEventV2WithJWTAuthorizer, APIGatewayProxyResultV2 } from 'aws-lambda';
 import { Controller } from 'src/applications/contracts/Controller';
 import { ApplicationError } from 'src/applications/errors/application/ApplicationError';
 import { ErrorCode } from 'src/applications/errors/ErrorCode';
 import { HttpError } from 'src/applications/errors/http/HttpError';
 import { ZodError } from 'zod';
 
-export function lambdaHttpAdapter(controller: Controller<unknown>) {
+type Event = APIGatewayProxyEventV2 | APIGatewayProxyEventV2WithJWTAuthorizer
 
-  return async (event: APIGatewayProxyEventV2): Promise<APIGatewayProxyResultV2> => {
+export function lambdaHttpAdapter(controller: Controller<any, unknown>) {
+
+  return async (event: Event): Promise<APIGatewayProxyResultV2> => {
     try {
       const body = lambdaBodyParser(event.body);
       const params = event.pathParameters ?? {};
       const queryParams = event.queryStringParameters ?? {};
 
+      const accountId = (
+        'authorizer' in event.requestContext
+          ? event.requestContext.authorizer.jwt.claims.internalId as string
+          : null
+      );
+
       const response = await controller.execute({
         body,
         params,
         queryParams,
+        accountId,
       });
 
       return {

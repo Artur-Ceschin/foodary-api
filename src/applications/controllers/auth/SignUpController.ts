@@ -7,14 +7,14 @@ import { SignUpUseCase } from 'src/applications/usecases/auth/SignUpUseCase';
 
 @Injectable()
 @Schema(signUpSchema)
-export class SignUpController extends Controller<unknown> {
+export class SignUpController extends Controller<'public', SignUpController.Response> {
 
   constructor(private signUpUseCase: SignUpUseCase) {
     super();
   }
 
   protected async handle(
-    { body }: Controller.Request<SignUpBody>):
+    { body }: Controller.Request<'public', SignUpBody>):
     Promise<Controller.Response<SignUpController.Response>> {
 
     const { account } = body;

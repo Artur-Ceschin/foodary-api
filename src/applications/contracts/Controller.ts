@@ -1,11 +1,13 @@
 import { Injectable } from '@kernel/decorators/Injectable';
 import { getSchema } from '@kernel/decorators/Schema';
 
-@Injectable()
-export abstract class Controller<TBody = undefined> {
-    protected abstract handle(request: Controller.Request): Promise<Controller.Response<TBody>>
+type TRouteType = 'public' | 'private'
 
-    public execute(request: Controller.Request):Promise<Controller.Response<TBody>> {
+@Injectable()
+export abstract class Controller<TType extends TRouteType, TBody = undefined> {
+    protected abstract handle(request: Controller.Request<TType>): Promise<Controller.Response<TBody>>
+
+    public execute(request: Controller.Request<TType>):Promise<Controller.Response<TBody>> {
       const body = this.validateBody(request.body);
 
       return this.handle({
@@ -14,18 +16,18 @@ export abstract class Controller<TBody = undefined> {
       });
     }
 
-    private validateBody(body: Controller.Request['body']) {
+    private validateBody(body: Controller.Request<TType>['body']) {
       const schema = getSchema(this);
       if(!schema) {
         return body;
       }
 
-      return schema.parse(body) as Controller.Request['body'];
+      return schema.parse(body) as Controller.Request<TType>['body'];
     }
 }
 
 export namespace Controller {
-  export type Request<
+  export type BaseRequest<
     TBody = Record<string, unknown>,
     TParams = Record<string, unknown>,
     TQueryParams = Record<string, unknown>
@@ -34,6 +36,31 @@ export namespace Controller {
     params: TParams,
     queryParams: TQueryParams,
   }
+
+  export type PublicRequest<
+    TBody = Record<string, unknown>,
+    TParams = Record<string, unknown>,
+    TQueryParams = Record<string, unknown>
+    > = BaseRequest<TBody, TParams, TQueryParams> & {
+      accountId: null
+  }
+
+  export type PrivateRequest<
+    TBody = Record<string, unknown>,
+    TParams = Record<string, unknown>,
+    TQueryParams = Record<string, unknown>
+    > = BaseRequest<TBody, TParams, TQueryParams> & {
+      accountId: string
+  }
+
+  export type Request<
+    TType extends TRouteType,
+    TBody = Record<string, unknown>,
+    TParams = Record<string, unknown>,
+    TQueryParams = Record<string, unknown>
+  > = TType extends 'public'
+      ? PublicRequest<TBody, TParams, TQueryParams>
+      : PrivateRequest<TBody, TParams, TQueryParams>
 
   export type Response<TBody = undefined> = {
     statusCode: number,

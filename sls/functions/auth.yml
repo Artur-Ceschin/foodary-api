@@ -20,3 +20,9 @@ preSignUpTrigger:
         trigger: PreSignUp
         existing: true
         forceDeploy: true
+
+# The trigger is configured manually to support event v3
+# Go to UserPool.yml to see the configuration
+# Do not change this function name without changing it in UserPool.yml
+preTokenGenerationTrigger:
+  handler: src/main/functions/auth/preTokenGenerationTrigger.handler

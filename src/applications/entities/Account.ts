@@ -6,7 +6,7 @@ export class Account {
 
   readonly email: string;
 
-  externalId: string;
+  externalId: string | undefined;
 
   readonly createdAt: Date;
 
@@ -23,7 +23,7 @@ export namespace Account {
 
   export type Attributes = {
     email: string
-    externalId: string
+    externalId?: string | undefined
     id?: string
     createdAt?: Date
   }

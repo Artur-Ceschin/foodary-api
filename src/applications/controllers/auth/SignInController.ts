@@ -7,14 +7,14 @@ import { SignInBody, signInSchema } from './schemas/signInSchema';
 
 @Injectable()
 @Schema(signInSchema)
-export class SignInController extends Controller<unknown> {
+export class SignInController extends Controller<'public', SignInController.Response> {
 
   constructor(private signInUseCase: SignInUseCase) {
     super();
   }
 
   protected async handle(
-    { body }: Controller.Request<SignInBody>):
+    { body }: Controller.Request<'public', SignInBody>):
     Promise<Controller.Response<SignInController.Response>> {
 
     const { email, password } = body;
