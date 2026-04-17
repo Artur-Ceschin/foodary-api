@@ -1,4 +1,5 @@
 import { Injectable } from '@kernel/decorators/Injectable';
+import { InvalidCredentials } from 'src/applications/errors/application/InvalidCredentials';
 import { AuthGateway } from 'src/infra/gateways/AuthGateway';
 
 @Injectable()
@@ -7,14 +8,17 @@ export class SignInUseCase {
     private readonly authGateway: AuthGateway,
   ){}
 
-  async execute({ email, password }: SignInUseCase.Input):
-  Promise<SignInUseCase.Output> {
-    const { accessToken, refreshToken } = await this.authGateway.signIn({ email, password });
+  async execute({ email, password }: SignInUseCase.Input): Promise<SignInUseCase.Output> {
+    try {
+      const { accessToken, refreshToken } = await this.authGateway.signIn({ email, password });
 
-    return {
-      accessToken,
-      refreshToken,
-    };
+      return {
+        accessToken,
+        refreshToken,
+      };
+    } catch {
+      throw new InvalidCredentials();
+    }
   }
 }
 
