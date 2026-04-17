@@ -1,8 +1,11 @@
-import { GetTokensFromRefreshTokenCommand, InitiateAuthCommand, SignUpCommand } from '@aws-sdk/client-cognito-identity-provider';
+import { ConfirmForgotPasswordCommand, ExpiredCodeException, ForgotPasswordCommand, GetTokensFromRefreshTokenCommand, InitiateAuthCommand, SignUpCommand } from '@aws-sdk/client-cognito-identity-provider';
 import { cognitoClient } from '@infra/clients/cognitoClient';
 import { Injectable } from '@kernel/decorators/Injectable';
 import { AppConfig } from '@shared/config/AppConfig';
 import { createHmac } from 'crypto';
+import { CodeMismatchExceptionError } from 'src/applications/errors/application/CodeMismatchExceptionError';
+import { ExpiredCodeExceptionError } from 'src/applications/errors/application/ExpiredCodeExceptionError';
+import { BadRequest } from 'src/applications/errors/http/BadRequest';
 
 @Injectable()
 export class AuthGateway {
@@ -88,6 +91,46 @@ export class AuthGateway {
     };
   }
 
+  async forgotPassword({ email }: AuthGateway.ForgotPasswordParams): Promise<void> {
+
+    const command = new ForgotPasswordCommand({
+      ClientId: this.appConfig.auth.cognito.client.id,
+      Username: email,
+      SecretHash: this.getSecretHash(email),
+    });
+
+    await cognitoClient.send(command);
+  }
+
+  async confirmForgotPassword({
+    email,
+    confirmationCode,
+    password,
+  }:AuthGateway.ConfirmForgotPasswordParams):Promise<void> {
+
+    try {
+      const command = new ConfirmForgotPasswordCommand({
+        ClientId: this.appConfig.auth.cognito.client.id,
+        ConfirmationCode: confirmationCode,
+        Password: password,
+        Username: email,
+        SecretHash: this.getSecretHash(email),
+      });
+
+      await cognitoClient.send(command);
+    } catch (error) {
+      if(error instanceof ExpiredCodeException) {
+        throw new ExpiredCodeExceptionError();
+      }
+
+      if(error instanceof CodeMismatchExceptionError) {
+        throw new CodeMismatchExceptionError();
+      }
+
+      throw new BadRequest('Failed. Try again');
+    }
+  }
+
   private getSecretHash(email: string): string {
     const { id, secret } = this.appConfig.auth.cognito.client;
     return createHmac('SHA256', secret)
@@ -124,5 +167,15 @@ export namespace AuthGateway{
   export type RefreshTokenResult = {
     accessToken: string;
     refreshToken: string
+  }
+
+  export type ForgotPasswordParams = {
+    email: string;
+  }
+
+  export type ConfirmForgotPasswordParams = {
+    email: string;
+    password: string
+    confirmationCode: string
   }
 }
