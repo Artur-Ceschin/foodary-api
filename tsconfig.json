@@ -12,7 +12,7 @@
 
     "noImplicitOverride": true,
     "strict": true,
-    "jsx": "react-jsx",
+    "jsx": "react",
     "isolatedModules": true,
     "noUncheckedSideEffectImports": true,
     "moduleDetection": "force",

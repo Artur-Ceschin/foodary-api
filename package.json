@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "dev:email": "email dev --dir src/infra/emails/templates --port 3003"
   },
   "keywords": [],
   "author": "",
@@ -12,8 +13,11 @@
   "packageManager": "pnpm@10.12.1",
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@react-email/ui": "6.0.8",
     "@types/aws-lambda": "^8.10.161",
     "@types/node": "^25.3.3",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
     "esbuild-plugin-tsc": "^0.5.0",
     "eslint": "^10.0.2",
     "globals": "^17.4.0",
@@ -26,6 +30,9 @@
     "@aws-sdk/client-dynamodb": "^3.1025.0",
     "@aws-sdk/lib-dynamodb": "^3.1025.0",
     "ksuid": "^3.0.0",
+    "react": "19.2.5",
+    "react-dom": "19.2.5",
+    "react-email": "^6.0.8",
     "reflect-metadata": "^0.2.2"
   }
 }
