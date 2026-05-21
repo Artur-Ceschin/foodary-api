@@ -1,6 +1,8 @@
 import { AccountRepository } from '@infra/database/dynamo/repositories/AccountRepository';
 import { Injectable } from '@kernel/decorators/Injectable';
 import { Account } from 'src/applications/entities/Account';
+import { Goal } from 'src/applications/entities/Goal';
+import { Profile } from 'src/applications/entities/Profile';
 import { EmailAlreadyInUse } from 'src/applications/errors/application/EmailAlreadyInUse';
 import { AuthGateway } from 'src/infra/gateways/AuthGateway';
 
@@ -11,7 +13,7 @@ export class SignUpUseCase {
     private readonly accountRepository: AccountRepository,
   ){}
 
-  async execute({ email, password }: SignUpUseCase.Input):
+  async execute({ account: { email, password }, profile: profileInfo }: SignUpUseCase.Input):
   Promise<SignUpUseCase.Output> {
     const emailAlreadyInUse = await this.accountRepository.findEmail(email);
 
@@ -19,6 +21,14 @@ export class SignUpUseCase {
       throw new EmailAlreadyInUse();
     }
     const account = new Account({ email });
+    const profile = new Profile({ ...profileInfo, accountId: account.id });
+    const goal = new Goal({
+      accountId: account.id,
+      calories: 3000,
+      proteins: 180,
+      fats: 80,
+      carbohydrates: 200,
+    });
 
     const { externalId } = await this.authGateway.signUp({
       email,
@@ -41,8 +51,19 @@ export class SignUpUseCase {
 
 export namespace SignUpUseCase {
   export type Input = {
-    email: string
-    password: string
+    account: {
+      email: string
+      password: string
+    }
+
+    profile: {
+      name: string;
+      birthDate: Date;
+      gender: Profile.Gender;
+      height: number;
+      weight: number;
+      activityLevel: Profile.ActivityLevel;
+    }
   }
 
   export type Output = {
