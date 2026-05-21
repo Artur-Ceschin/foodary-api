@@ -1,4 +1,5 @@
 import { AccountRepository } from '@infra/database/dynamo/repositories/AccountRepository';
+import { SignUpUnitOfWork } from '@infra/database/dynamo/uow/SignUpUnifOfWork';
 import { Injectable } from '@kernel/decorators/Injectable';
 import { Account } from 'src/applications/entities/Account';
 import { Goal } from 'src/applications/entities/Goal';
@@ -11,6 +12,8 @@ export class SignUpUseCase {
   constructor(
     private readonly authGateway: AuthGateway,
     private readonly accountRepository: AccountRepository,
+    private readonly signUpUow: SignUpUnitOfWork,
+
   ){}
 
   async execute({ account: { email, password }, profile: profileInfo }: SignUpUseCase.Input):
@@ -38,7 +41,11 @@ export class SignUpUseCase {
 
     account.externalId = externalId;
 
-    await this.accountRepository.create(account);
+    await this.signUpUow.run({
+      account,
+      goal,
+      profile,
+    });
 
     const { accessToken, refreshToken } = await this.authGateway.signIn({ email, password });
 
