@@ -20,6 +20,6 @@ export class ProfileRepository {
   }
 
   async create(profile: Profile): Promise<void>{
-    await dynamoClient.send(new PutCommand(this.getPutCommand(profile)));
+    await dynamoClient.send(new PutCommand(this.getPutCommandInput(profile)));
   }
 }

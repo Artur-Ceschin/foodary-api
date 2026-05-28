@@ -1,6 +1,8 @@
+import { GoalCalculator } from '@applications/services/GoalCalculator';
 import { AccountRepository } from '@infra/database/dynamo/repositories/AccountRepository';
 import { SignUpUnitOfWork } from '@infra/database/dynamo/uow/SignUpUnifOfWork';
 import { Injectable } from '@kernel/decorators/Injectable';
+import { Saga } from '@shared/saga/Saga';
 import { Account } from 'src/applications/entities/Account';
 import { Goal } from 'src/applications/entities/Goal';
 import { Profile } from 'src/applications/entities/Profile';
@@ -13,46 +15,69 @@ export class SignUpUseCase {
     private readonly authGateway: AuthGateway,
     private readonly accountRepository: AccountRepository,
     private readonly signUpUow: SignUpUnitOfWork,
-
+    private readonly saga: Saga,
   ){}
 
-  async execute({ account: { email, password }, profile: profileInfo }: SignUpUseCase.Input):
-  Promise<SignUpUseCase.Output> {
-    const emailAlreadyInUse = await this.accountRepository.findEmail(email);
+  async execute({
+    account: { email, password },
+    profile: profileInfo,
+  }: SignUpUseCase.Input): Promise<SignUpUseCase.Output> {
 
-    if(emailAlreadyInUse) {
-      throw new EmailAlreadyInUse();
-    }
-    const account = new Account({ email });
-    const profile = new Profile({ ...profileInfo, accountId: account.id });
-    const goal = new Goal({
-      accountId: account.id,
-      calories: 3000,
-      proteins: 180,
-      fats: 80,
-      carbohydrates: 200,
+    return this.saga.run(async () => {
+      const emailAlreadyInUse = await this.accountRepository.findByEmail(email);
+
+      if(emailAlreadyInUse) {
+        throw new EmailAlreadyInUse();
+      }
+
+      const account = new Account({ email });
+      const profile = new Profile({
+        ...profileInfo,
+        accountId: account.id,
+      });
+
+      const {
+        fats,
+        calories,
+        carbohydrates,
+        proteins,
+      } = GoalCalculator.calculate(profile);
+
+      const goal = new Goal({
+        accountId: account.id,
+        fats,
+        calories,
+        carbohydrates,
+        proteins,
+      });
+
+      const { externalId } = await this.authGateway.signUp({
+        email,
+        password ,
+        internalId: account.id,
+      });
+
+      this.saga.addCompensation(() => {
+        // eslint-disable-next-line no-console
+        console.log('>>> Deleting user from Cognito');
+        return this.authGateway.deleteUser({ externalId });
+      });
+
+      account.externalId = externalId;
+
+      await this.signUpUow.run({
+        account,
+        goal,
+        profile,
+      });
+
+      const { accessToken, refreshToken } = await this.authGateway.signIn({ email, password });
+
+      return {
+        accessToken,
+        refreshToken,
+      };
     });
-
-    const { externalId } = await this.authGateway.signUp({
-      email,
-      password ,
-      internalId: account.id,
-    });
-
-    account.externalId = externalId;
-
-    await this.signUpUow.run({
-      account,
-      goal,
-      profile,
-    });
-
-    const { accessToken, refreshToken } = await this.authGateway.signIn({ email, password });
-
-    return {
-      accessToken,
-      refreshToken,
-    };
   }
 }
 
@@ -70,6 +95,7 @@ export namespace SignUpUseCase {
       height: number;
       weight: number;
       activityLevel: Profile.ActivityLevel;
+      goal: Profile.Goal
     }
   }
 

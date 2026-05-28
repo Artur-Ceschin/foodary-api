@@ -10,7 +10,7 @@ import { QueryCommand } from '@aws-sdk/client-dynamodb';
 export class AccountRepository {
   constructor(private readonly config: AppConfig) {}
 
-  async findEmail(email: string): Promise<Account | null> {
+  async findByEmail(email: string): Promise<Account | null> {
 
     const command = new QueryCommand({
       IndexName: 'GSI1',
