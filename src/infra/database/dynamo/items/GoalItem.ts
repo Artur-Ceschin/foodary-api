@@ -3,7 +3,7 @@ import { AccountItem } from './AccountItem';
 
 export class GoalItem {
 
-  private readonly type = 'Goal';
+  static readonly type = 'Goal';
   private readonly keys: GoalItem.Keys;
 
   constructor(readonly attrs: GoalItem.GoalItem) {
@@ -36,7 +36,7 @@ export class GoalItem {
     return {
       ...this.keys,
       ...this.attrs,
-      type: this.type,
+      type: GoalItem.type,
     };
   }
 

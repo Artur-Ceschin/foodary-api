@@ -1,17 +1,28 @@
 
+import { Profile } from '@applications/entities/Profile';
+import { GetProfileAndGoalQuery } from '@applications/query/GetProfileAndGoalQuery';
 import { Injectable } from '@kernel/decorators/Injectable';
 import { Controller } from 'src/applications/contracts/Controller';
 
 @Injectable()
 export class GetMeController extends Controller<'private', GetMeController.Response> {
+
+  constructor(private readonly getProfileAndGoalQuery: GetProfileAndGoalQuery) {
+    super();
+  }
+
   protected override async handle({
     accountId,
   }: Controller.Request<'private'>): Promise<Controller.Response<GetMeController.Response>> {
-
+    const {
+      goal,
+      profile,
+    } = await this.getProfileAndGoalQuery.execute({ accountId });
     return {
-      statusCode: 201,
+      statusCode: 200,
       body: {
-        accountId,
+        goal,
+        profile,
       },
     };
   }
@@ -19,6 +30,19 @@ export class GetMeController extends Controller<'private', GetMeController.Respo
 
 export namespace GetMeController {
   export type Response = {
-    accountId: string
+    profile: {
+      name: string;
+      birthDate: string;
+      gender: Profile.Gender;
+      height: number;
+      weight: number;
+    }
+
+    goal: {
+      calories: number;
+      proteins: number;
+      carbohydrates: number
+      fats: number;
+    }
   }
 }
