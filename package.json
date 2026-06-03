@@ -28,7 +28,9 @@
   "dependencies": {
     "@aws-sdk/client-cognito-identity-provider": "^3.1009.0",
     "@aws-sdk/client-dynamodb": "^3.1025.0",
+    "@aws-sdk/client-s3": "^3.1059.0",
     "@aws-sdk/lib-dynamodb": "^3.1025.0",
+    "@aws-sdk/s3-presigned-post": "^3.1059.0",
     "ksuid": "^3.0.0",
     "react": "19.2.5",
     "react-dom": "19.2.5",
