@@ -21,7 +21,7 @@ export class CreateMealUseCase {
 
     const meal = new Meal({
       accountId,
-      inputTye: file.inputType,
+      inputType: file.inputType,
       status: Meal.Status.UPLOADING,
       inputFileKey,
     });

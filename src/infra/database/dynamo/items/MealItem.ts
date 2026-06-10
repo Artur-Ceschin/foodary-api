@@ -7,8 +7,14 @@ export class MealItem {
 
   constructor(readonly attrs: MealItem.Attributes) {
     this.keys = {
-      PK: MealItem.getPK(attrs.id),
-      SK: MealItem.getSK(attrs.id),
+      PK: MealItem.getPK({
+        accountId: this.attrs.accountId,
+        mealId: this.attrs.id,
+      }),
+      SK: MealItem.getSK({
+        accountId: this.attrs.accountId,
+        mealId: this.attrs.id,
+      }),
       GSI1PK: MealItem.getGSI1PK({
         accountId: attrs.accountId,
         createdAt: new Date(attrs.createdAt),
@@ -29,7 +35,7 @@ export class MealItem {
       id: mealItem.id,
       accountId: mealItem.accountId,
       inputFileKey: mealItem.inputFileKey,
-      inputTye: mealItem.inputTye,
+      inputType: mealItem.inputType,
       status: mealItem.status,
       name: mealItem.name,
       icon: mealItem.icon,
@@ -47,12 +53,12 @@ export class MealItem {
     };
   }
 
-  static getPK(mealId: string): MealItem.Keys['PK']  {
-    return `MEAL#${mealId}`;
+  static getPK({ mealId, accountId }: MealItem.PKParams): MealItem.Keys['PK']  {
+    return `ACCOUNT#${accountId}#MEAL#${mealId}`;
   }
 
-  static getSK(mealId: string): MealItem.Keys['SK']  {
-    return `MEAL#${mealId}`;
+  static getSK({ mealId, accountId }: MealItem.SKParams): MealItem.Keys['SK']  {
+    return `ACCOUNT#${accountId}#MEAL#${mealId}`;
   }
 
   static getGSI1PK({ accountId, createdAt }: MealItem.GS1PKParams): MealItem.Keys['GSI1PK']  {
@@ -70,8 +76,8 @@ export class MealItem {
 
 export namespace MealItem {
   export type Keys = {
-    PK: `MEAL#${string}`
-    SK: `MEAL#${string}`
+    PK: `ACCOUNT#${string}MEAL#${string}`
+    SK: `ACCOUNT#${string}MEAL#${string}`
     GSI1PK: `MEALS#${string}#${string}-${string}-${string}`
     GSI1SK: `MEALS#${string}`
   }
@@ -81,7 +87,7 @@ export namespace MealItem {
     accountId: string
     status: Meal.Status;
     attempts: number;
-    inputTye: Meal.InputType;
+    inputType: Meal.InputType;
     inputFileKey: string;
     name: string;
     icon: string;
@@ -96,5 +102,15 @@ export namespace MealItem {
   export type GS1PKParams = {
     accountId: string
     createdAt: Date
+  }
+
+  export type PKParams = {
+    accountId: string
+    mealId: string
+  }
+
+  export type SKParams = {
+    accountId: string
+    mealId: string
   }
 }

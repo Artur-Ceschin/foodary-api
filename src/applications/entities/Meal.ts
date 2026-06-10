@@ -10,7 +10,7 @@ export class Meal {
 
   attempts: number;
 
-  inputTye: Meal.InputType;
+  inputType: Meal.InputType;
 
   inputFileKey: string;
 
@@ -28,7 +28,7 @@ export class Meal {
     this.accountId = attr.accountId;
     this.status = attr.status;
     this.attempts = attr.attempts ?? 0;
-    this.inputTye = attr.inputTye;
+    this.inputType = attr.inputType;
     this.inputFileKey = attr.inputFileKey;
     this.name = attr.name ?? '';
     this.icon = attr.icon ?? '';
@@ -44,7 +44,7 @@ export namespace Meal {
     accountId: string
     status: Meal.Status;
     attempts?: number;
-    inputTye: Meal.InputType;
+    inputType: Meal.InputType;
     inputFileKey: string;
     name?: string;
     icon?: string;
