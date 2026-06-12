@@ -20,7 +20,7 @@ export class GetMealByIdUseCase {
     }
 
     return {
-      meals: {
+      meal: {
         accountId: meal.accountId,
         status: meal.status,
         id: meal.id,
@@ -44,7 +44,7 @@ export namespace GetMealByIdUseCase {
   }
 
   export type OutPut = {
-    meals: {
+    meal: {
       id: string
       accountId: string
       status: Meal.Status;
